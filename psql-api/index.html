@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background-color: #f4f4f9; }
+        h2 { color: #333; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #fff; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background-color: #007bff; color: white; }
+        tr:hover { background-color: #f1f1f1; }
+    </style>
+</head>
+<body>
+
+    <h2>ঢাকা শহরের কাস্টমারদের তালিকা (Frontend)</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>City</th>
+            </tr>
+        </thead>
+        <tbody id="customer-table-body">
+            </tbody>
+    </table>
+
+    <script>
+        // ব্যাকএন্ড REST API থেকে ডেটা নিয়ে আসার ফাংশন
+        async function fetchCustomers() {
+            try {
+                // আপনার তৈরি করা GET API লিঙ্ক
+                const response = await fetch('http://localhost:5000/api/customers/dhaka');
+                const data = await response.json();
+                
+                const tableBody = document.getElementById('customer-table-body');
+                tableBody.innerHTML = ''; // টেবিল খালি করা
+
+                // লুপ চালিয়ে প্রতিটা ডেটা টেবিলে বসানো
+                data.forEach(customer => {
+                    const row = `
+                        <tr>
+                            <td>${customer.customer_id}</td>
+                            <td>${customer.name}</td>
+                            <td>${customer.email}</td>
+                            <td>${customer.city}</td>
+                        </tr>
+                    `;
+                    tableBody.innerHTML += row;
+                });
+            } catch (error) {
+                console.error('ডেটা আনতে সমস্যা হয়েছে:', error);
+            }
+        }
+
+        // পেজ লোড হওয়ার সাথে সাথে ফাংশনটি চালু হবে
+        window.onload = fetchCustomers;
+    </script>
+</body>
+</html>
